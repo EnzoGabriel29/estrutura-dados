@@ -1,10 +1,16 @@
 package Arvores;
 
-abstract public class No {
-    protected int dado;
+public abstract class No {
+    protected int chave;
     protected No pai;
     protected No[] filhos;
-    
-    public abstract void inserirNo(No n);
+
+    @Override
+    public String toString() {
+        return this == null ? null : String.format("%d", chave);
+    }
+         
+    public abstract boolean inserirNo(No n);
+    public abstract No buscarNo(int chave);
     public abstract void imprimirPreOrdem();
 }

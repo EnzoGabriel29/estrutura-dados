@@ -2,7 +2,7 @@ package Arvores;
 
 public class Arvore {
     private No raiz;
-    
+
     public Arvore(No raiz){
         this.raiz = raiz;
     }
@@ -11,7 +11,11 @@ public class Arvore {
         raiz.imprimirPreOrdem();
     }
     
-    public void inserirNo(No no){
-        raiz.inserirNo(no);
+    public boolean inserirNo(No no){
+        return raiz.inserirNo(no);
+    }
+    
+    public No buscarNo(int chave){
+        return raiz.buscarNo(chave);
     }
 }
