@@ -1,8 +1,7 @@
-package estruturadados;
+package projalgsii;
 
 public class NoBinario extends No<NoBinario> {
-    protected NoBinario[] filhos;
-
+    
     public NoBinario(int chave){
         this.chave = chave;
         this.filhos = new NoBinario[2];
@@ -22,7 +21,7 @@ public class NoBinario extends No<NoBinario> {
         int alturaDireita = this.filhos[1] == null ? 0 : this.filhos[1].getAltura();
         return 1 + (alturaEsquerda > alturaDireita ? alturaEsquerda : alturaDireita);       
     }
-
+    
     @Override
     public void imprimePreOrdem(){
         this.imprimePreOrdem(true);

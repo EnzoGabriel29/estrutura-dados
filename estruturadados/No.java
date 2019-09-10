@@ -1,7 +1,8 @@
-package estruturadados;
+package projalgsii;
 
 abstract public class No<T extends No> {
     protected int chave;
+    protected T[] filhos;
 
     abstract public void insereNo(T n);
     abstract public int getAltura();
