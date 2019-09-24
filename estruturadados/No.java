@@ -1,12 +1,13 @@
-package projalgsii;
+package projetosii;
 
-abstract public class No<T extends No> {
+public abstract class No {
+    
     protected int chave;
-    protected T[] filhos;
-
-    abstract public void insereNo(T n);
-    abstract public int getAltura();
-    abstract public void imprimePreOrdem();
-    abstract protected void imprimePreOrdem(boolean v);
-    abstract public T encontraNo(int chave);
+    protected No pai;
+    protected No[] filhos;
+    
+    public abstract boolean inserirNo(No n);
+    public abstract No buscarNo(int chave);
+    public abstract void imprimirPreOrdem();
+    
 }

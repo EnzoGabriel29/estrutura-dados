@@ -1,46 +1,40 @@
-package projalgsii;
+package projetosii;
 
-public class NoBinario extends No<NoBinario> {
+public class NoBinario extends No {
     
     public NoBinario(int chave){
+        filhos = new No[2];
         this.chave = chave;
-        this.filhos = new NoBinario[2];
     }
 
     @Override
-    public void insereNo(NoBinario n){
+    public boolean inserirNo(No n){
+        if (n.chave == this.chave) return false;
         int indice = n.chave < this.chave ? 0 : 1;
-
-        if (filhos[indice] == null) filhos[indice] = n;
-        else filhos[indice].insereNo(n);
+        
+        if (filhos[indice] == null){
+            this.filhos[indice] = n;
+            n.pai = this;
+            return true;
+            
+        } else return filhos[indice].inserirNo(n);   
     }
 
     @Override
-    public int getAltura(){
-        int alturaEsquerda = this.filhos[0] == null ? 0 : this.filhos[0].getAltura();
-        int alturaDireita = this.filhos[1] == null ? 0 : this.filhos[1].getAltura();
-        return 1 + (alturaEsquerda > alturaDireita ? alturaEsquerda : alturaDireita);       
+    public No buscarNo(int chave) {
+        if (chave == this.chave) return this;
+        int indice = chave < this.chave ? 0 : 1;
+        
+        if (this.filhos[indice] == null) return null;
+        else return this.filhos[indice].buscarNo(chave);
+    }
+
+    @Override
+    public void imprimirPreOrdem() {
+        System.out.print(chave + " ");
+        
+        if (this.filhos[0] != null) this.filhos[0].imprimirPreOrdem();
+        if (this.filhos[1] != null) this.filhos[1].imprimirPreOrdem();
     }
     
-    @Override
-    public void imprimePreOrdem(){
-        this.imprimePreOrdem(true);
-        System.out.println();
-    }
-
-    @Override
-    protected void imprimePreOrdem(boolean v){
-        System.out.print(this.chave + " ");
-        if (this.filhos[0] != null) this.filhos[0].imprimePreOrdem(true);
-        if (this.filhos[1] != null) this.filhos[1].imprimePreOrdem(true);
-    }
-
-    @Override
-    public NoBinario encontraNo(int chave){
-        if (this.chave == chave) return this;
-
-        int indice = this.chave > chave ? 0 : 1;
-        if (this.filhos[indice] == null) return null;
-        else return this.filhos[indice].encontraNo(chave); 
-    }
 }

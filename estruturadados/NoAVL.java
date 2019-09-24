@@ -1,70 +1,96 @@
-package projalgsii;
+package projetosii;
 
-public class NoAVL extends No<NoAVL> {
+public class NoAVL extends NoBinario {
+
+    int fatorBal;
     
     public NoAVL(int chave){
-        this.chave = chave;
-        this.filhos = new NoAVL[2];
-    }
-
-    @Override
-    public void insereNo(NoAVL n){
-        int indice = n.chave < this.chave ? 0 : 1;
-
-        if (filhos[indice] == null) filhos[indice] = n;
-        else filhos[indice].insereNo(n);
-        
-        // TODO - balanceia arvore
-    }
-
-    @Override
-    public int getAltura(){
-        int alturaEsquerda = this.filhos[0] == null ? 0 : this.filhos[0].getAltura();
-        int alturaDireita = this.filhos[1] == null ? 0 : this.filhos[1].getAltura();
-        return 1 + (alturaEsquerda > alturaDireita ? alturaEsquerda : alturaDireita);       
+        super(chave);
+        fatorBal = 0;
     }
     
-    @Override
-    public void imprimePreOrdem(){
-        this.imprimePreOrdem(true);
-        System.out.println();
+    public No retornaValor(No n){
+        return n == null ? null : n;
     }
 
     @Override
-    protected void imprimePreOrdem(boolean v){
-        System.out.print(this.chave + " ");
-        if (this.filhos[0] != null) this.filhos[0].imprimePreOrdem(true);
-        if (this.filhos[1] != null) this.filhos[1].imprimePreOrdem(true);
-    }
-
-    @Override
-    public NoAVL encontraNo(int chave){
-        if (this.chave == chave) return this;
-
-        int indice = this.chave > chave ? 0 : 1;
-        if (this.filhos[indice] == null) return null;
-        else return this.filhos[indice].encontraNo(chave); 
+    public boolean inserirNo(No n) {
+        if (super.inserirNo(n)){
+            ajustaBal(n);
+            return true; 
+        }
+        
+        return false;
     }
     
-    public int getFB(){
-        int alturaEsquerda = this.filhos[0] == null ? 0 : this.filhos[0].getAltura();
-        int alturaDireita = this.filhos[1] == null ? 0 : this.filhos[1].getAltura();
-        return alturaEsquerda - alturaDireita;
+    private void ajustaBal(No n){
+        NoAVL navl = (NoAVL) n;
+        if (n.pai == null) return;
+
+        NoAVL nAVLPai = (NoAVL) n.pai;
+        if(navl.fatorBal+1 > nAVLPai.fatorBal){
+            nAVLPai.fatorBal = navl.fatorBal+1;
+            ajustaBal(nAVLPai);
+        }
     }
+
+    @Override
+    public void imprimirPreOrdem() {
+        System.out.print(chave + "(" + fatorBal + ") ");
         
-    public void balanceiaNo(NoAVL noPai){
-        int indice = this.getFB() > -1 ? 0 : 1;
-        NoAVL noFilho = this.filhos[indice];
+        if (filhos[0] != null) filhos[0].imprimirPreOrdem();
+        if (filhos[1] != null) filhos[1].imprimirPreOrdem();
+    }
+    
+    public void balanceiaNo(){
+        int indice = this.fatorBal > -1 ? 0 : 1;
+        NoAVL noFilho = (NoAVL) this.filhos[indice];
         NoAVL noNeto;
         
-        // rotação à direita
-        noNeto = noFilho.filhos[0];
-        if (noFilho.getFB() >= 1 && noNeto.getFB() >= 1){
-            if (noPai != null){
-                noPai.filhos[0] = noFilho;
+        noNeto = (NoAVL) noFilho.filhos[indice];
+        
+        if (indice == 0){
+            // rotação à direita
+            if (noFilho.fatorBal >= 1 && noNeto.fatorBal >= 1){
+                if (this.pai != null) this.pai.filhos[0] = noFilho;
+
                 this.filhos[0] = noFilho.filhos[1];
                 noFilho.filhos[1] = this;
+
+            // rotação dupla à direita
+            } else {
+                if (this.pai != null) this.pai = noNeto;
+                
+                noNeto.filhos[0] = noFilho;
+                noNeto.filhos[1] = this;
+                this.filhos[0] = noNeto.filhos[1];
+                noFilho.filhos[1] = noNeto.filhos[0];
+            }
+            
+        } else {
+            // rotação à esquerda
+            if (noFilho.fatorBal <= -1 && noNeto.fatorBal <= -1){
+                if (this.pai != null) this.pai.filhos[0] = noFilho;
+                
+                this.filhos[1] = noFilho.filhos[0];
+                noFilho.filhos[0] = this;
+                
+            // rotação dupla à esquerda
+            } else {
+                if (this.pai != null) this.pai = noNeto;
+                
+                this.filhos[1] = noNeto == null ? null : noNeto.filhos[0];
+                
+                if (noFilho != null)
+                    noFilho.filhos[0] = noNeto == null ? null : noNeto.filhos[1];
+                
+                if (noNeto != null){
+                    noNeto.filhos[0] = this;
+                    noNeto.filhos[1] = noFilho == null ? null : noFilho;
+                }
             }
         }
-    }   
+        
+    }
+        
 }
