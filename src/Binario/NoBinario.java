@@ -2,13 +2,16 @@ package Binario;
 import No.No;
 
 public class NoBinario extends No {
+    public int chave;
+    
     public NoBinario(int chave){
-        this.filhos = new No[2];
+        this.filhos = new NoBinario[2];
         this.chave = chave;
     }
         
     @Override
-    public void insereNo(No no){
+    public void insereNo(No n){
+        NoBinario no = (NoBinario) n;
         if (this.chave == no.chave) return;
         
         int i = no.chave < this.chave ? 0 : 1;
@@ -45,21 +48,20 @@ public class NoBinario extends No {
     @Override
     public void mostraArvore(){
         if (this.filhos[1] != null)
-            this.filhos[1].mostraArvore(true, "");
+            ((NoBinario) this.filhos[1]).mostraArvore(true, "");
         
        System.out.println(this.toString());
        
         if (this.filhos[0] != null)
-            this.filhos[0].mostraArvore(false, "");
+            ((NoBinario) this.filhos[0]).mostraArvore(false, "");
         
         System.out.println();
     }  
     
-    @Override
-    public void mostraArvore(boolean isDireita, String identacao){
+    private void mostraArvore(boolean isDireita, String identacao){
         if (this.filhos[1] != null){
             String identacao1 = identacao + (isDireita ? "        " : " |      ");
-            this.filhos[1].mostraArvore(true, identacao1);
+            ((NoBinario) this.filhos[1]).mostraArvore(true, identacao1);
         }
         
         System.out.print(identacao);
@@ -70,7 +72,7 @@ public class NoBinario extends No {
         
         if (this.filhos[0] != null){
             String identacao2 = identacao + (isDireita ? " |      " : "        ");
-            this.filhos[0].mostraArvore(false, identacao2);
+            ((NoBinario) this.filhos[0]).mostraArvore(false, identacao2);
         }
     }
 }

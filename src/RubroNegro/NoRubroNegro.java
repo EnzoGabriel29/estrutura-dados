@@ -107,14 +107,10 @@ public class NoRubroNegro extends NoBalanceado {
         return (NoRubroNegro) this.filhos[1];
     }
     
-    public boolean isFilhoEsquerdo(){
-        return this == this.pai.filhos[0];
-    }
-    
     public NoRubroNegro getIrmao(){
         if (this.pai == null) return null;
 
-        int i = this.isFilhoEsquerdo() ? 1 : 0;
+        int i = this == this.pai.filhos[0] ? 1 : 0;
         return (NoRubroNegro) this.pai.filhos[i];        
     }
     
@@ -137,7 +133,7 @@ public class NoRubroNegro extends NoBalanceado {
                 else if (no.getIrmao() != null)
                     no.getIrmao().cor = Cor.VERMELHO;
 
-                int i = no.isFilhoEsquerdo() ? 0 : 1;
+                int i = no == no.pai.filhos[0] ? 0 : 1;
                 noPai.filhos[i] = null;
             }
 
@@ -146,7 +142,7 @@ public class NoRubroNegro extends NoBalanceado {
                 this.arvore.raiz = noSub;
 
             else {
-                int i = no.isFilhoEsquerdo() ? 0 : 1;
+                int i = no == no.pai.filhos[0] ? 0 : 1;
                 noPai.filhos[i] = noSub;
 
                 noSub.pai = noPai;

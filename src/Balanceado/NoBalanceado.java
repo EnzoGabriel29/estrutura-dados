@@ -16,10 +16,10 @@ public class NoBalanceado extends NoBinario {
             if (this.pai == null)
                 filhoDir.pai = null;
             
-            else if (this.pai.filhos[0].chave == this.chave)
+            else if (this.pai.filhos[0] == this)
                 ((NoBalanceado) this.pai).setFilho(filhoDir, 0);
             
-            else if (this.pai.filhos[1].chave == this.chave)
+            else if (this.pai.filhos[1] == this)
                 ((NoBalanceado) this.pai).setFilho(filhoDir, 1);
 
             filhoDir.setFilho(this, 0);
@@ -38,10 +38,10 @@ public class NoBalanceado extends NoBinario {
             if (this.pai == null)
                 filhoEsq.pai = null;
             
-            else if (this.pai.filhos[0].chave == this.chave)
+            else if (this.pai.filhos[0] == this)
                 ((NoBalanceado) this.pai).setFilho(filhoEsq, 0);
             
-            else if (this.pai.filhos[1].chave == this.chave)
+            else if (this.pai.filhos[1] == this)
                 ((NoBalanceado) this.pai).setFilho(filhoEsq, 1);
 
             filhoEsq.setFilho(this, 1);

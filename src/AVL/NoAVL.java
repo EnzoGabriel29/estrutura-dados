@@ -12,11 +12,14 @@ public class NoAVL extends NoBalanceado {
   
     public static void getInfo(NoAVL no, boolean isRecursivo){
         if (no == null) return;
-
-        System.out.println("Pai: " + (no.pai == null ? "null" : no.pai.chave));
+        NoAVL noPai = (NoAVL) no.pai;
+        NoAVL noEsq = (NoAVL) no.filhos[0];
+        NoAVL noDir = (NoAVL) no.filhos[1];
+                
+        System.out.println("Pai: " + (noPai == null ? "null" : noPai.chave));
         System.out.println("Chave: " + no.chave);
-        System.out.println("Filho esquerdo: " + (no.filhos[0] == null ? "null" : no.filhos[0].chave));
-        System.out.println("Filho direito: " + (no.filhos[1] == null ? "null" : no.filhos[1].chave));
+        System.out.println("Filho esquerdo: " + (noEsq == null ? "null" : noEsq.chave));
+        System.out.println("Filho direito: " + (noDir == null ? "null" : noDir.chave));
         System.out.println("Altura: " + (no.altura));
         System.out.println("Fator de balanceamento: " + (no.getFatorBal()));
         if (isRecursivo) System.out.println();
@@ -127,7 +130,7 @@ public class NoAVL extends NoBalanceado {
 
         else {  
             if (this.filhos[0] == null && this.filhos[1] == null){
-                int i = this.pai.filhos[0].chave == this.chave ? 0 : 1;
+                int i = this.pai.filhos[0] == this ? 0 : 1;
                 ((NoAVL) this.pai).setFilho(null, i);
                 return;
                 
@@ -135,7 +138,7 @@ public class NoAVL extends NoBalanceado {
                 int indFilho = this.filhos[0] == null ? 1 : 0;
                 NoAVL filho = (NoAVL) this.filhos[indFilho];
                 
-                int i = this.pai.filhos[0].chave == this.chave ? 0 : 1;
+                int i = this.pai.filhos[0] == this ? 0 : 1;
                 ((NoAVL) this.pai).setFilho(filho, i);
                 return;
                 
@@ -146,7 +149,7 @@ public class NoAVL extends NoBalanceado {
                 boolean isRaiz = this.pai == null;
                 
                 if (!isRaiz){
-                    int i = this.pai.filhos[0].chave == this.chave ? 0 : 1;
+                    int i = this.pai.filhos[0] == this ? 0 : 1;
                     ((NoAVL) this.pai).setFilho(neto, i);  
                 } 
                 
