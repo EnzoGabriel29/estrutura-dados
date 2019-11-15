@@ -39,6 +39,9 @@ public class NoBinario extends No {
         if (no != null) no.pai = this;
     }
     
+    // FONTE: How to print binary tree diagram?
+    // AUTOR: Laurent Demailly
+    // https://stackoverflow.com/a/19484210/
     @Override
     public void mostraArvore(){
         if (this.filhos[1] != null)

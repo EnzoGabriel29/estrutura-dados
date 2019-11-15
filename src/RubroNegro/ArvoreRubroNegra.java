@@ -27,7 +27,6 @@ public class ArvoreRubroNegra {
         this.raiz.recoloriza(no);
         this.atualizaRaiz();
         this.mostraArvore();
-        
     }
     
     public void setRaiz(NoRubroNegro raiz){        
@@ -53,11 +52,21 @@ public class ArvoreRubroNegra {
     public static void main(String[] args) {
         ArvoreRubroNegra a = ArvoreRubroNegra.getInstance();
         a.insereNo(7); 
-        a.insereNo(6); 
-        a.insereNo(5); 
-        a.insereNo(4); 
         a.insereNo(3); 
+        a.insereNo(18); 
+        a.insereNo(10); 
+        a.insereNo(22); 
+        a.insereNo(8); 
+        a.insereNo(11); 
+        a.insereNo(26); 
         a.insereNo(2); 
-        a.insereNo(1); 
+        a.insereNo(6); 
+        a.insereNo(13); 
+        
+        a.removeNo(18);
+        a.removeNo(11);
+        a.removeNo(3);
+        a.removeNo(10);
+        a.removeNo(22);
     }
 }
