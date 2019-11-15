@@ -1,21 +1,21 @@
-package AVL;
+package RubroNegro;
 
-public class ArvoreAVL {
-    private static ArvoreAVL arvore;
-    private ArvoreAVL(){}
-    public static ArvoreAVL getInstance(){
+public class ArvoreRubroNegra {
+    private static ArvoreRubroNegra arvore;
+    private ArvoreRubroNegra(){}
+    public static ArvoreRubroNegra getInstance(){
         if (arvore == null)
-            arvore = new ArvoreAVL();
+            arvore = new ArvoreRubroNegra();
         
         return arvore;
     }
     
-    public NoAVL raiz;
+    public NoRubroNegro raiz;
   
     public void insereNo(int chave){
         System.out.println("Inserindo a chave " + chave + ":");
         
-        NoAVL no = NoAVL.retornaNo(chave);
+        NoRubroNegro no = NoRubroNegro.retornaNo(chave);
         if (this.raiz == null)
             this.raiz = no;
 
@@ -23,11 +23,14 @@ public class ArvoreAVL {
             this.raiz.insereNo(no);
             this.atualizaRaiz();
         }
-        
         this.mostraArvore();
+        this.raiz.recoloriza(no);
+        this.atualizaRaiz();
+        this.mostraArvore();
+        
     }
     
-    public void setRaiz(NoAVL raiz){
+    public void setRaiz(NoRubroNegro raiz){        
         this.raiz = raiz;
     }
     
@@ -40,30 +43,21 @@ public class ArvoreAVL {
     
     public void atualizaRaiz(){
         while (this.raiz.pai != null)
-            this.raiz = (NoAVL) this.raiz.pai;
+            this.raiz = (NoRubroNegro) this.raiz.pai;
     }
     
     public void mostraArvore(){
         this.raiz.mostraArvore();
     }
-
-    public static void main(String[] args) { 
-        ArvoreAVL a = ArvoreAVL.getInstance();
-  
-        a.insereNo(9);
-        a.insereNo(5); 
-        a.insereNo(10);
-        a.insereNo(0); 
+    
+    public static void main(String[] args) {
+        ArvoreRubroNegra a = ArvoreRubroNegra.getInstance();
+        a.insereNo(7); 
         a.insereNo(6); 
-        a.insereNo(11); 
-        a.insereNo(-1); 
+        a.insereNo(5); 
+        a.insereNo(4); 
+        a.insereNo(3); 
+        a.insereNo(2); 
         a.insereNo(1); 
-        a.insereNo(2);
-        
-        a.removeNo(10);
-        a.removeNo(2);
-        a.removeNo(0);
-        a.removeNo(9);
-        a.removeNo(5);
-    } 
+    }
 }
