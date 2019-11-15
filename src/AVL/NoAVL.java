@@ -4,7 +4,7 @@ public class NoAVL {
     public int chave, altura; 
     public NoAVL[] filhos;
     public NoAVL pai;
-    private ArvoreAVL arvore;
+    private final ArvoreAVL arvore;
   
     public static void getInfo(NoAVL no, boolean isRecursivo){
         if (no == null) return;
@@ -13,6 +13,8 @@ public class NoAVL {
         System.out.println("Chave: " + no.chave);
         System.out.println("Filho esquerdo: " + (no.filhos[0] == null ? "null" : no.filhos[0].chave));
         System.out.println("Filho direito: " + (no.filhos[1] == null ? "null" : no.filhos[1].chave));
+        System.out.println("Altura: " + (no.altura));
+        System.out.println("Fator de balanceamento: " + (no.getFatorBal()));
         if (isRecursivo) System.out.println();
 
         if (isRecursivo) NoAVL.getInfo(no.filhos[0], true);
@@ -30,8 +32,6 @@ public class NoAVL {
         this.arvore.mostraArvore();
         System.out.println("Rotacionando o nó " + this.chave + " à esquerda:");
         
-        int alturaEsq, alturaDir;
-
         NoAVL filhoDir = this.filhos[1]; 
         NoAVL netoEsq;
         if (filhoDir == null) netoEsq = null;
@@ -51,24 +51,16 @@ public class NoAVL {
         }
         
         this.setFilho(netoEsq, 1);
-  
-        alturaEsq = this.filhos[0] == null ? 0 : this.filhos[0].altura;
-        alturaDir = this.filhos[1] == null ? 0 : this.filhos[1].altura;
-        this.altura = Math.max(alturaEsq, alturaDir) + 1;
+        this.atualizaAltura();
 
-        if (filhoDir != null){
-            alturaEsq = filhoDir.filhos[0] == null ? 0 : filhoDir.filhos[0].altura;
-            alturaDir = filhoDir.filhos[1] == null ? 0 : filhoDir.filhos[1].altura;
-            filhoDir.altura = Math.max(alturaEsq, alturaDir) + 1;
-        }
+        if (filhoDir != null)
+            filhoDir.atualizaAltura();
     } 
 
     public void rotacionaDireita(){
         this.arvore.mostraArvore();
         System.out.println("Rotacionando o nó " + this.chave + " à direita:");
         
-        int alturaEsq, alturaDir;
-
         NoAVL filhoEsq = this.filhos[0];
         NoAVL netoDir;
         if (filhoEsq == null) netoDir = null;
@@ -88,16 +80,10 @@ public class NoAVL {
         }
 
         this.setFilho(netoDir, 0); 
-  
-        alturaEsq = this.filhos[0] == null ? 0 : this.filhos[0].altura;
-        alturaDir = this.filhos[1] == null ? 0 : this.filhos[1].altura;
-        this.altura = Math.max(alturaEsq, alturaDir) + 1;
+        this.atualizaAltura();
 
-        if (filhoEsq != null){
-            alturaEsq = filhoEsq.filhos[0] == null ? 0 : filhoEsq.filhos[0].altura;
-            alturaDir = filhoEsq.filhos[1] == null ? 0 : filhoEsq.filhos[1].altura;
-            filhoEsq.altura = Math.max(alturaEsq, alturaDir) + 1; 
-        }
+        if (filhoEsq != null)
+            filhoEsq.atualizaAltura();
     } 
 
     public int getFatorBal() { 
@@ -120,27 +106,8 @@ public class NoAVL {
         
         else this.filhos[indice].insereNo(no.chave);
           
-        int alturaEsq = this.filhos[0] == null ? 0 : this.filhos[0].altura;
-        int alturaDir = this.filhos[1] == null ? 0 : this.filhos[1].altura;
-        this.altura = 1 + Math.max(alturaEsq, alturaDir); 
-  
-        int fatorBal = this.getFatorBal();
-  
-        if (fatorBal > 1 && no.chave < this.filhos[0].chave) 
-            this.rotacionaDireita(); 
-  
-        else if (fatorBal < -1 && no.chave > this.filhos[1].chave) 
-            this.rotacionaEsquerda(); 
-  
-        else if (fatorBal > 1 && no.chave > this.filhos[0].chave) { 
-            this.filhos[0].rotacionaEsquerda();
-            this.rotacionaDireita(); 
-        } 
-  
-        else if (fatorBal < -1 && no.chave < this.filhos[1].chave) { 
-            this.filhos[1].rotacionaDireita();
-            this.rotacionaEsquerda(); 
-        }
+        this.atualizaAltura();
+        this.ajustaRotacao();
     } 
     
     public void setFilho(NoAVL no, int pos){
@@ -178,6 +145,31 @@ public class NoAVL {
         }
     }
     
+    public void atualizaAltura(){
+        int alturaEsq = this.filhos[0] == null ? 0 : this.filhos[0].altura;
+        int alturaDir = this.filhos[1] == null ? 0 : this.filhos[1].altura;
+        this.altura = Math.max(alturaEsq, alturaDir) + 1;  
+    }
+    
+    public void ajustaRotacao(){
+        int fatorBal = this.getFatorBal();
+  
+        if (fatorBal > 1 && filhos[0].getFatorBal() >= 0)
+            this.rotacionaDireita();
+  
+        else if (fatorBal < -1 && filhos[1].getFatorBal() <= 0)  
+            this.rotacionaEsquerda();
+        
+        else if (fatorBal > 1 && filhos[0].getFatorBal() < 0){  
+            this.filhos[0].rotacionaEsquerda();
+            this.rotacionaDireita();
+            
+        } else if (fatorBal < -1 && filhos[1].getFatorBal() > 0){  
+            this.filhos[1].rotacionaDireita();
+            this.rotacionaEsquerda(); 
+        }
+    }
+    
     public NoAVL getMenorNo() {  
         NoAVL atual = this;  
   
@@ -188,6 +180,8 @@ public class NoAVL {
     }  
     
     public void removeNo(int chave){
+        NoAVL novaRaiz = null;
+        
         if (chave < this.chave)
             this.filhos[0].removeNo(chave);
   
@@ -210,35 +204,36 @@ public class NoAVL {
                 NoAVL neto = this.filhos[1].getMenorNo(); 
                 NoAVL filhoEsq = this.filhos[0];
                 
-                if (this.pai != null){
+                boolean isRaiz = this.pai == null;
+                
+                if (!isRaiz){
                     int i = this.pai.filhos[0].chave == this.chave ? 0 : 1;
                     this.pai.setFilho(neto, i);  
                 } 
                 
                 neto.setFilho(filhoEsq, 0);
+               
+                if (isRaiz){
+                    novaRaiz = this.filhos[1];
+                    this.setFilho(null, 0);
+                    this.setFilho(null, 1);
+                    novaRaiz.pai = null;
+                    this.arvore.setRaiz(novaRaiz);
+                }
             }  
         }
         
-        int alturaEsq = this.filhos[0] == null ? 0 : this.filhos[0].altura;
-        int alturaDir = this.filhos[1] == null ? 0 : this.filhos[1].altura;
-        this.altura = Math.max(alturaDir, alturaEsq) + 1;  
-
-        int fatorBal = this.getFatorBal();
-  
-        if (fatorBal > 1 && filhos[0].getFatorBal() >= 0)
-            this.rotacionaDireita();
-  
-        else if (fatorBal < -1 && filhos[1].getFatorBal() <= 0)  
-            this.rotacionaEsquerda();
+        if (novaRaiz == null)
+            novaRaiz = this;
         
-        else if (fatorBal > 1 && filhos[0].getFatorBal() < 0){  
-            this.filhos[0].rotacionaEsquerda();
-            this.rotacionaDireita();
+        if (novaRaiz.filhos[0] != null)
+            novaRaiz.filhos[0].atualizaAltura();
+        
+        if (novaRaiz.filhos[1] != null)
+            novaRaiz.filhos[1].atualizaAltura();
             
-        } else if (fatorBal < -1 && this.filhos[1].getFatorBal() > 0){  
-            this.filhos[1].rotacionaDireita();
-            this.rotacionaEsquerda(); 
-        }
+        novaRaiz.atualizaAltura();
+        novaRaiz.ajustaRotacao();
     } 
 }
  
