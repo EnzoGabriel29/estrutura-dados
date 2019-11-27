@@ -2,110 +2,68 @@ package EstruturaDados.Arvore.B;
 
 public class ArvoreB {
     private static ArvoreB arvore;
-    
-    private ArvoreB(int t){
-        this.grau = t;
+    private ArvoreB(int grau){
+        this.grau = grau;
     }
-    
-    public static ArvoreB getInstance(int t){
-        if (arvore == null)
-             arvore = new ArvoreB(t);
-        
-        return arvore;
-    }
-    
-    public static ArvoreB getInstance(){
-        if (arvore != null) return arvore;
-        return null;
-    }
-    
-    public int grau;
-    public NoB raiz = null;
-    
-    public void mostraArvore(){
-        this.raiz.mostraArvore();
-    }
-    
-    public void insereNo(int chave){
-        System.out.println("Inserindo a chave " + chave + ":");
-        
-        if (this.raiz == null){
-            this.raiz = new NoB(this.grau, true);
-            this.raiz.chaves[0] = chave;
-            this.raiz.numChaves = 1;
+    public static ArvoreB getInstance(int grau){
+        if (ArvoreB.arvore == null)
+            ArvoreB.arvore = new ArvoreB(grau);
             
-        } else this.raiz.insereChave(chave);
-                
-        /*
-        if (this.raiz == null){ 
-            this.raiz = new NoB(this.grau, true); 
-            this.raiz.chaves[0] = chave; 
-            this.raiz.numChaves = 1; 
-
-        } else if (this.raiz.isCheio()){ 
-            NoB novaRaiz = new NoB(this.grau, false); 
-            novaRaiz.filhos.add(0, this.raiz); 
-            novaRaiz.divideFilho(0, this.raiz); 
-
-            int j = 0; 
-            if (novaRaiz.chaves[0] < chave) j++; 
-            novaRaiz.filhos.get(j).insereChave(chave); 
-            this.raiz = novaRaiz; 
+        return ArvoreB.arvore;
+    }
+    
+    protected int grau;
+    protected NoB raiz;
+    
+    public void insereChave(int chave){
+        if (this.raiz == null)
+            this.raiz = new NoB(this.grau);
         
-        } else this.raiz.insereChave(chave); 
-                */
+        this.raiz.insereChave(chave);
         this.atualizaRaiz();
         this.mostraArvore();
-        System.out.println();
     }
     
     public void atualizaRaiz(){
-        NoB aux = this.raiz;
+        NoB noAux = this.raiz;
         
-        while (aux.pai != null)
-            aux = (NoB) aux.pai;
+        while (noAux.pai != null)
+            noAux = (NoB) noAux.pai;
         
-        this.raiz = aux;
+        this.raiz = noAux;
     }
     
-    public void removeNo(int chave){
-        System.out.println("Removendo o nó " + chave + ":");
-        if (raiz == null) return;
-        
-        this.raiz.removeNo(chave);
-        
-        if (this.raiz.numChaves == 0)
-            this.raiz = this.raiz.isFolha ? null : this.raiz.filhos.get(0);
-        
-        this.mostraArvore();
+    public void mostraArvore(){
+        this.raiz.mostraArvore();
         System.out.println();
     }
     
     public static void main(String[] args){
-        ArvoreB a = ArvoreB.getInstance(3);
-        a.insereNo(1); 
-        a.insereNo(3); 
-        a.insereNo(7); 
-        a.insereNo(10); 
-        a.insereNo(11); 
-        a.insereNo(13); 
-        a.insereNo(14); 
-        a.insereNo(15); 
-        a.insereNo(18); 
-        a.insereNo(16); 
-        a.insereNo(19); 
-        a.insereNo(24); 
-        a.insereNo(25); 
-        a.insereNo(26); 
-        a.insereNo(21); 
-        a.insereNo(4); 
-        a.insereNo(5); 
-        a.insereNo(20); 
-        a.insereNo(22); 
-        a.insereNo(2); 
-        a.insereNo(17); 
-        a.insereNo(12); 
-        a.insereNo(6);
+        ArvoreB a = ArvoreB.getInstance(2);
+        a.insereChave(1); 
+        a.insereChave(3); 
+        a.insereChave(7); 
+        a.insereChave(10); 
+        a.insereChave(11); 
+        a.insereChave(13); 
+        a.insereChave(14); 
+        a.insereChave(15); 
+        a.insereChave(18); 
+        a.insereChave(16); 
+        a.insereChave(19); 
+        a.insereChave(24); 
+        a.insereChave(25); 
+        a.insereChave(26); 
+        a.insereChave(21); 
+        a.insereChave(4); 
+        a.insereChave(5); 
+        a.insereChave(20); 
+        a.insereChave(22); 
+        a.insereChave(2); 
+        a.insereChave(17); 
+        a.insereChave(12); 
+        a.insereChave(6);
+        a.insereChave(25);
         
 //        a.removeNo(6);
 //        a.removeNo(13);

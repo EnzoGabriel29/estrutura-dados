@@ -1,103 +1,160 @@
 package EstruturaDados.Arvore.B;
 
 import EstruturaDados.Arvore.No;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 
 public class NoB extends No {
     public ArvoreB arvore;
-    public Integer[] chaves;
-    public ArrayList<NoB> filhos;
-    public int grau;
-    public int numChaves;
-    public boolean isFolha;
+    public final int grau;
+    public final Integer[] chaves;
+    public int numChaves, numFilhos;
     
-    public NoB(int grau, boolean isFolha){
+    public NoB(int grau){
+        this.arvore = ArvoreB.getInstance(grau);
         this.grau = grau;
-        this.isFolha = isFolha;
-        this.chaves = new Integer[2*grau - 1];
-        this.filhos = new ArrayList<>();
+        this.chaves = new Integer[2*grau-1];
+        this.filhos = new NoB[2*grau];
         this.numChaves = 0;
-        this.arvore = ArvoreB.getInstance(3);
+        this.numFilhos = 0;
     }
-        
+
+    public boolean isFolha(){
+        return this.filhos[0] == null;
+    }
+
+    public boolean isCheioChaves(){
+        return this.numChaves == 2*this.grau - 1;
+    }
+    
+    public boolean isCheioFilhos(){
+        return this.numFilhos == 2*this.grau;
+    }
+    
     @Override
     public No buscaNo(int chave) {
         int i = 0;
         for (; i < this.numChaves && chave > this.chaves[i]; i++){}
         
         if (this.chaves[i] == chave) return this;
-        if (this.isFolha) return null;
-        return this.filhos.get(i).buscaNo(chave);
+        if (this.isFolha()) return null;
+        return this.filhos[i].buscaNo(chave);
+    }
+
+    public void divideNo(){
+        NoB novoNo = new NoB(this.grau);
+        int mediana = this.grau - 1;
+        
+        for (int i = 0; i < mediana; i++){
+            novoNo.setChave(this.chaves[i+this.grau], i);
+            this.setChave(null, i+this.grau);
+        }
+
+        if (!this.isFolha()){
+            for (int i = 0; i < mediana+1; i++){
+                novoNo.setFilho(this.filhos[i+this.grau], i);
+                this.setFilho(null, i+this.grau);
+            }
+        }
+        
+        NoB noPai;
+        if (this.pai == null){
+            noPai = new NoB(this.grau);
+            this.pai = noPai;
+            noPai.insereNo(this);
+        
+        } else noPai = (NoB) this.pai;
+        
+        noPai.insereNo(novoNo);
+                
+        int i = 0;
+        while (i < noPai.numChaves && this.chaves[mediana] > noPai.chaves[i]) i++;
+        
+        for (int j = noPai.numChaves-1; j >= i; j--){
+            noPai.chaves[j+1] = noPai.chaves[j];
+            noPai.chaves[j] = null;
+        }
+        
+        noPai.chaves[i] = this.chaves[mediana];
+        noPai.numChaves++;
+        
+        this.setChave(null, mediana);
+        
+        arvore.atualizaRaiz();
+        arvore.mostraArvore();
+    }
+    
+    public void setChave(Integer chave, int pos){
+        if (this.chaves[pos] == null && chave != null) this.numChaves++;
+        else if (this.chaves[pos] != null && chave == null) this.numChaves--;
+        this.chaves[pos] = chave;
+    }
+    
+    @Override
+    public void setFilho(No n, int pos){
+        NoB no = (NoB) n;
+        if (this.filhos[pos] == null && no != null) this.numFilhos++;
+        else if (this.filhos[pos] != null && no == null) this.numFilhos--;
+        
+        if (no != null) no.pai = this;
+        this.filhos[pos] = no;
     }
 
     @Override
-    public void insereNo(No no){
+    public void insereChave(int chave){
+        System.out.println("Inserindo a chave " + chave + ":");
         
+        int i = 0;
+        while (i < this.numChaves && chave > this.chaves[i]) i++;
+        
+        if (!this.isFolha()){
+            System.out.println("Posição do filho a ser inserido: " + i);
+            this.filhos[i].insereChave(chave);
+            return;
+        }
+        
+        if (this.isCheioChaves()){
+            NoB noPai = (NoB) this.pai;
+            
+            if (noPai != null && noPai.isCheioFilhos()){
+                System.out.println("Nó pai cheio, efetuando divisão:");
+                noPai.divideNo();
+            }
+                
+            System.out.println("Nó cheio, efetuando divisão:");
+            this.divideNo();
+            this.pai.insereChave(chave);
+            return;
+        }
+
+        System.out.println("Posição da chave a ser inserida: " + i);
+        for (int j = this.numChaves-1; j >= i; j--){
+            this.chaves[j+1] = this.chaves[j];
+            this.chaves[j] = null;
+        }
+
+        this.chaves[i] = chave;
+        this.numChaves++;
     }
     
     @Override
-    public void insereChave(int chave){
-        int i = this.numChaves - 1;
+    public void insereNo(No n){
+        NoB no = (NoB) n;
         
-        if (this.isFolha){
-            while (i >= 0 && this.chaves[i] > chave){
-                this.chaves[i+1] = this.chaves[i];
-                i--;
-            }
-            
-            this.chaves[i+1] = chave;
-            this.numChaves++;
-            
-        } else {
-            while (i >= 0 && this.chaves[i] > chave)
-                i--;
-            
-            if (this.filhos.get(i+1).numChaves == 2*this.grau - 1){
-                this.divideFilho(i+1, this.filhos.get(i+1));
-                 
-                if (this.chaves[i+1] < chave) i++;
-            }
-            
-            this.filhos.get(i+1).insereChave(chave);
-        }
-    }
-    
-    public void divideFilho(int indice, NoB no){
-        NoB novoNo = new NoB(no.grau, no.isFolha);
-        novoNo.numChaves = this.grau - 1;
-        
-        
-        
-        for (int i = 0; i < this.grau - 1; i++){
-            novoNo.chaves[i] = no.chaves[i + this.grau];
-            no.chaves[i + this.grau] = null;
-        }
-            
-        if (!no.isFolha){
-            NoB noFilho;
-            
-            for (int i = 0; i < this.grau; i++){
-                noFilho = no.filhos.get(i + this.grau);
-                novoNo.filhos.set(i, noFilho);
-            }
+        if (this.isCheioFilhos()){
+            this.divideNo();
+            this.pai.insereNo(no);
+            return;
         }
         
-        no.numChaves = this.grau - 1;
+        int i = 0;        
+        while (i < this.numFilhos && no.chaves[0] > ((NoB) this.filhos[i]).chaves[0]) i++;
         
-        for (int i = this.numChaves; i >= indice + 1; i--)
-            this.filhos.set(i+1, this.filhos.get(i));
+        for (int j = this.numFilhos-1; j >= i; j--){
+            this.filhos[j+1] = this.filhos[j];
+            this.filhos[j] = null;
+        }
         
-        this.filhos.add(novoNo);
-       
-        
-        for (int i = this.numChaves - 1; i >= indice; i--)
-            this.chaves[i+1] = this.chaves[i];
-        
-        this.chaves[indice] = no.chaves[this.grau - 1];
-        no.chaves[this.grau - 1] = null;
-        this.numChaves++;
+        this.setFilho(no, i);
     }
 
     @Override
@@ -110,21 +167,18 @@ public class NoB extends No {
     // https://stackoverflow.com/a/8948691
     private void mostraArvore(String prefixo1, String prefixo2){
         String strArray = Arrays.toString(this.chaves).replace("null", "--");
-                
         System.out.println(prefixo1 + strArray);
         
-        for (Iterator<NoB> it = this.filhos.iterator(); it.hasNext();){
-            NoB no = it.next();
-            if (it.hasNext())
-                no.mostraArvore(prefixo2 + "   ├── ", prefixo2 + "   │   ");
+        NoB noFilho;
+        for (int i = 0; i < numFilhos; i++){
+            noFilho = (NoB) this.filhos[i];
+
+            if (i < numFilhos-1)
+                noFilho.mostraArvore(prefixo2 + "   ├── ", prefixo2 + "   │   ");
             else
-                no.mostraArvore(prefixo2 + "   └── ", prefixo2 + "       ");
+                noFilho.mostraArvore(prefixo2 + "   └── ", prefixo2 + "       ");
         }
-    }
+    }   
 
-    @Override
-    public void setFilho(No no, int pos){}
-
-    @Override
-    public void removeNo(int chave){}   
+    @Override public void removeNo(int chave){}   
 }
