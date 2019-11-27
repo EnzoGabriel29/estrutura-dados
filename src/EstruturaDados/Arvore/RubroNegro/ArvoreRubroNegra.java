@@ -1,4 +1,4 @@
-package RubroNegro;
+package EstruturaDados.Arvore.RubroNegro;
 
 public class ArvoreRubroNegra {
     private static ArvoreRubroNegra arvore;
@@ -49,7 +49,7 @@ public class ArvoreRubroNegra {
         this.raiz.mostraArvore();
     }
     
-    public static void main(String[] args) {
+    public static void main(String[] args){
         ArvoreRubroNegra a = ArvoreRubroNegra.getInstance();
         a.insereNo(7); 
         a.insereNo(3); 

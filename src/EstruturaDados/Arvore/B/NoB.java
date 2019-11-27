@@ -1,5 +1,6 @@
-package B;
-import No.No;
+package EstruturaDados.Arvore.B;
+
+import EstruturaDados.Arvore.No;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -36,7 +37,8 @@ public class NoB extends No {
         
     }
     
-    public void insereNo(int chave){
+    @Override
+    public void insereChave(int chave){
         int i = this.numChaves - 1;
         
         if (this.isFolha){
@@ -58,7 +60,7 @@ public class NoB extends No {
                 if (this.chaves[i+1] < chave) i++;
             }
             
-            this.filhos.get(i+1).insereNo(chave);
+            this.filhos.get(i+1).insereChave(chave);
         }
     }
     
@@ -121,13 +123,8 @@ public class NoB extends No {
     }
 
     @Override
-    public void setFilho(No no, int pos) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+    public void setFilho(No no, int pos){}
 
     @Override
-    public void removeNo(int chave) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }   
-    
+    public void removeNo(int chave){}   
 }

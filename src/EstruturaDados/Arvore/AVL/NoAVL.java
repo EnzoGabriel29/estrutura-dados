@@ -1,6 +1,6 @@
-package AVL;
-import No.No;
-import Balanceado.NoBalanceado;
+package EstruturaDados.Arvore.AVL;
+import EstruturaDados.Arvore.No;
+import EstruturaDados.Arvore.NoBalanceado;
 
 public class NoAVL extends NoBalanceado { 
     public int altura;
@@ -62,7 +62,7 @@ public class NoAVL extends NoBalanceado {
             filhoEsq.atualizaAltura();
     } 
 
-    public int getFatorBal() { 
+    public int getFatorBal(){ 
         NoAVL filhoEsq = (NoAVL) this.filhos[0];
         NoAVL filhoDir = (NoAVL) this.filhos[1];
         
@@ -109,7 +109,7 @@ public class NoAVL extends NoBalanceado {
         }
     }
     
-    public NoAVL getMenorNo() {  
+    public NoAVL getMenorNo(){  
         NoAVL atual = this;  
   
         while (atual.filhos[0] != null)  
@@ -179,7 +179,7 @@ public class NoAVL extends NoBalanceado {
     } 
 
     @Override
-    public String toString() {
+    public String toString(){
         return this.chave + " (" + this.getFatorBal() + ")";
     }
 }

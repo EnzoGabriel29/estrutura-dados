@@ -1,6 +1,7 @@
-package RubroNegro;
-import No.No;
-import Balanceado.NoBalanceado;
+package EstruturaDados.Arvore.RubroNegro;
+
+import EstruturaDados.Arvore.No;
+import EstruturaDados.Arvore.NoBalanceado;
 
 public class NoRubroNegro extends NoBalanceado {
     public Cor cor;
@@ -10,7 +11,7 @@ public class NoRubroNegro extends NoBalanceado {
         return new NoRubroNegro(chave);
     }
     
-    public NoRubroNegro(int chave) {
+    public NoRubroNegro(int chave){
         super(chave);
         this.cor = Cor.VERMELHO;
         this.arvore = ArvoreRubroNegra.getInstance();

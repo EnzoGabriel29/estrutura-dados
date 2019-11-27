@@ -1,5 +1,4 @@
-package Balanceado;
-import Binario.NoBinario;
+package EstruturaDados.Arvore;
 
 public class NoBalanceado extends NoBinario {
     public NoBalanceado(int chave){

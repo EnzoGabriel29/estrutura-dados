@@ -1,4 +1,5 @@
-package AVL;
+package EstruturaDados.Arvore.AVL;
+
 
 public class ArvoreAVL {
     private static ArvoreAVL arvore;
@@ -47,7 +48,7 @@ public class ArvoreAVL {
         this.raiz.mostraArvore();
     }
 
-    public static void main(String[] args) { 
+    public static void main(String[] args){ 
         ArvoreAVL a = ArvoreAVL.getInstance();
   
         a.insereNo(9);

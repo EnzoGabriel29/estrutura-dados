@@ -1,5 +1,4 @@
-package Binario;
-import No.No;
+package EstruturaDados.Arvore;
 
 public class NoBinario extends No {
     public int chave;
@@ -8,7 +7,12 @@ public class NoBinario extends No {
         this.filhos = new NoBinario[2];
         this.chave = chave;
     }
-        
+
+    @Override
+    public void insereChave(int chave) {
+        this.insereNo(new NoBinario(chave));
+    }
+    
     @Override
     public void insereNo(No n){
         NoBinario no = (NoBinario) n;
@@ -23,7 +27,7 @@ public class NoBinario extends No {
     }
 
     @Override
-    public void removeNo(int chave) {
+    public void removeNo(int chave){
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
