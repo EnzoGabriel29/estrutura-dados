@@ -1,74 +1,98 @@
 package EstruturaDados;
 
+import java.util.Arrays;
+
 public class ListaPrioridade { 
-    private final int[] vetor; 
+    private final Integer[] vetor; 
     private int numElementos; 
     private final int maxElementos; 
   
     public ListaPrioridade(int maxElementos){ 
         this.maxElementos = maxElementos; 
         this.numElementos = 0; 
-        this.vetor = new int[this.maxElementos + 1]; 
-    } 
-  
-    private int getPai(int pos){ 
-        return pos / 2; 
-    } 
- 
-    private int getFilhoEsquerda(int pos){ 
-        return 2 * pos; 
+        this.vetor = new Integer[this.maxElementos]; 
     } 
     
-    private int getFilhoDireita(int pos){ 
-        return 2 * pos + 1; 
-    } 
-  
-    private boolean isFolha(int pos){ 
-        return pos >= (this.numElementos / 2) && pos <= this.numElementos; 
-    } 
-  
-    private void trocaNo(int pos1, int pos2){ 
-        int aux; 
-        aux = this.vetor[pos1]; 
-        this.vetor[pos1] = this.vetor[pos2]; 
-        this.vetor[pos2] = aux; 
-    } 
-  
-    private void transformaMaxHeap(int pos){ 
-        if (this.isFolha(pos)) return; 
+    public ListaPrioridade(Integer[] elementos){
+        this.maxElementos = elementos.length;
+        this.numElementos = 0;
+        for (Integer elemento: elementos){
+            if (elemento != null)
+                this.numElementos++;
+        }
         
-        int posEsq = this.getFilhoEsquerda(pos);
-        int posDir = this.getFilhoDireita(pos);
-        if (this.vetor[pos] < this.vetor[posEsq] || this.vetor[pos] < this.vetor[posDir]) { 
-            if (this.vetor[posEsq] > vetor[posDir]) { 
-                this.trocaNo(pos, posEsq);
-                posEsq = this.getFilhoEsquerda(pos);
-                this.transformaMaxHeap(posEsq); 
+        this.vetor = elementos;
+        this.mostraArvore();
+        for (int i = this.numElementos/2-1; i >= 0; i--){
+            System.out.println(i);
+            this.decrementaChave(i);
+            this.mostraArvore();
+        }
             
-            } else { 
-                this.trocaNo(pos, posDir);
-                posDir = this.getFilhoDireita(pos);
-                this.transformaMaxHeap(posDir); 
-            } 
-        } 
-    } 
-  
-    public void insereChave(int chave){ 
-        if (this.numElementos == this.maxElementos) return;
-        
-        this.vetor[this.numElementos++] = chave; 
-  
-        int posAtual = this.numElementos; 
-        while (this.vetor[posAtual] > this.vetor[getPai(posAtual)]) { 
-            this.trocaNo(posAtual, this.getPai(posAtual)); 
-            posAtual = this.getPai(posAtual); 
-        } 
-    } 
+    }
     
-    public int getMaiorChave(){ 
-        int elemento = this.vetor[0]; 
-        this.vetor[0] = this.vetor[this.numElementos--]; 
-        this.transformaMaxHeap(0); 
-        return elemento; 
-    } 
+    public void alteraPrioridade(int pos, int novaChave){
+        this.vetor[pos] = novaChave;
+        
+        if (this.vetor[pos] > novaChave)
+            this.decrementaChave(pos);
+        
+        else this.incrementaChave(pos);
+    }
+    
+    public void decrementaChave(int pos){
+        int i = 2 * pos + 2;
+        
+        int aux, maiorInd;
+        while (i < this.numElementos){
+            maiorInd = i;
+            if (maiorInd < this.numElementos-1 && this.vetor[maiorInd] < this.vetor[maiorInd+1]) 
+                maiorInd++;
+            
+            if (this.vetor[pos] < this.vetor[maiorInd]){
+                aux = this.vetor[pos];
+                this.vetor[pos] = this.vetor[maiorInd];
+                this.vetor[maiorInd] = aux;
+                
+                pos = maiorInd;
+                i = 2 * pos + 2;
+            
+            } else i = this.numElementos + 1;
+        }
+    }
+    
+    public void incrementaChave(int pos){
+        int aux, i = pos / 2;
+        while (pos > 1 && this.vetor[i] < this.vetor[pos]){
+            aux = this.vetor[pos];
+            this.vetor[pos] = this.vetor[i];
+            this.vetor[i] = aux;
+            
+            pos = i;
+            i = pos / 2;
+        }
+    }
+    
+    public void insereChave(int chave){
+        this.vetor[this.numElementos++] = chave;
+        this.incrementaChave(this.numElementos);
+    }
+    
+    public int removeMax(){
+        if (this.numElementos == 0) throw new IndexOutOfBoundsException();
+        int valorMax = this.vetor[0];
+        this.numElementos--;
+        this.decrementaChave(0);
+        return valorMax;
+    }
+    
+    public void mostraArvore(){
+        System.out.println(Arrays.toString(this.vetor));
+    }
+    
+    public static void main(String[] args){
+        Integer[] vetor = {4, 1, 3, 2, 16, 9, 10};
+        ListaPrioridade l = new ListaPrioridade(vetor);
+        l.mostraArvore();
+    }
 } 
